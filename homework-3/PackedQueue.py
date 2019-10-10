@@ -1,14 +1,4 @@
-def transform_tuples_into_list_and_separate_ints(arguments):
-    list_of_tuples = []
-    list_of_ints = []
-
-    for arg in arguments:
-        if type(arg) == tuple:
-            for elem in arg:
-                list_of_tuples.append(elem)
-        else:
-            list_of_ints.append(arg)
-    return list_of_tuples, list_of_ints
+from collections import deque
 
 
 def form_tuple(elements_from_tuples, needed_amount):
@@ -19,18 +9,22 @@ def form_tuple(elements_from_tuples, needed_amount):
         tuple_for_print = tuple(elements_from_tuples[i] for i in range(needed_amount))
         print(tuple_for_print)
         for i in range(needed_amount):
-            elements_from_tuples.pop(0)
+            elements_from_tuples.popleft()
         return
 
 
 def packed_queue():
     arguments = eval(input())
-    all_tuples_elements, all_ints = transform_tuples_into_list_and_separate_ints(arguments)
-    for integer in all_ints:
-        if len(all_tuples_elements) <= integer:
-            break
-        else:
-            form_tuple(all_tuples_elements, integer)
+    deq_of_tuple_elements = deque()
+    for arg in arguments:
+        if type(arg) == tuple:
+            for elem in arg:
+                deq_of_tuple_elements.append(elem)
+        elif type(arg) == int:
+            if len(deq_of_tuple_elements) < arg:
+                break
+            else:
+                form_tuple(deq_of_tuple_elements, arg)
 
 
 packed_queue()

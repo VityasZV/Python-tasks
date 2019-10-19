@@ -9,8 +9,8 @@ def maxfun(s, f1, *f):
     max_f = f1
     max_sum = sum_of_f_on_all_args(s, f1)
     for func in f:
-        if sum_of_f_on_all_args(s, func) >= max_sum:
+        summa = sum_of_f_on_all_args(s, func)
+        if summa >= max_sum:
             max_f = func
+            max_sum = summa
     return max_f
-
-print(maxfun([x/100000 for x in range(1,99999)], atan, atanh, ceil, cos, cosh, degrees, exp, fabs, floor, log10, log2, radians, sin, sinh, sqrt, tan, tanh))

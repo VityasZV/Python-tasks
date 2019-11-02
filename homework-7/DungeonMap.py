@@ -4,7 +4,6 @@ from collections import defaultdict
 def tunnels_from_input():
     tunnels = defaultdict(set)
     a_to_b = input().split(" ")
-    a = tuple()
     while len(a_to_b) != 1:
         tunnels[a_to_b[0]].add(a_to_b[1])
         tunnels[a_to_b[1]].add(a_to_b[0])

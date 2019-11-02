@@ -19,17 +19,21 @@ def check(dungeons, en):
     return res
 
 
-def way_check(tunnels, pos_way_l, dungeons, ending):
-    new_dungeons = set(tunnels[pos_way_l[-1]])
-    #print(new_dungeons)
-    if check(new_dungeons, ending):
+def way_check(tunnels, begin, ending): #dungeons is just begin
+    all_dungeons = set(tunnels.keys())
+    new_dungeons = tunnels[begin]
+    old_dungeons = {begin}
+    if check(new_dungeons.union(old_dungeons), ending):
         return True
     else:
-        for el in new_dungeons.difference(dungeons):
-            pos_way_l.append(el)
-            if way_check(tunnels, pos_way_l, dungeons.union({el}), ending):
+        while old_dungeons.union(new_dungeons) != old_dungeons:
+            old_dungeons = old_dungeons.union(new_dungeons)
+            save = new_dungeons
+            new_dungeons = set()
+            for el in save:
+                new_dungeons = new_dungeons.union(tunnels[el])
+            if check(new_dungeons.union(old_dungeons), ending):
                 return True
-            pos_way_l.pop()
         return False
 
 
@@ -40,11 +44,7 @@ def is_way_exist(beg_end_tunnels):
     #print(tunnels, begin, ending)
     if tunnels[begin] == set() or tunnels[ending] == set():
         return "NO"
-    p = list()
-    p.append(begin)
-    d = set()
-    d.add(begin)
-    res = way_check(tunnels, p, d, ending)
+    res = way_check(tunnels, begin, ending)
     answer = "YES" if res else "NO"
     return answer
 

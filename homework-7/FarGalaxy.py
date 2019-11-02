@@ -4,12 +4,6 @@ from collections import defaultdict
 def distance(a, b):
     return ((b[0]-a[0])**2 + (b[1]-a[1])**2 + (b[2]-a[2])**2)**0.5
 
-#хранить два максимума и два минимума по модулю (два в смысле по плюсу и по минусу), максимальное расстояние искать по ним
-
-def two_max_two_min(all_gal):
-    min_minus = min_plus = max_minus = max_plus = None
-    min_d_minus = min_d_plus = max_d_minus = max_d_plus = None
-    
 
 def far_galaxy():
     galaxy = input().split(" ")

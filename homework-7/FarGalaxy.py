@@ -1,23 +1,27 @@
 from collections import defaultdict
-
+from collections import deque
 
 def distance(a, b):
-    return ((b[0]-a[0])**2 + (b[1]-a[1])**2 + (b[2]-a[2])**2)**0.5
+    return (b[0]-a[0])**2 + (b[1]-a[1])**2 + (b[2]-a[2])**2 #without sqrt
 
 
 def far_galaxy():
     galaxy = input().split(" ")
-    result_g = 0
+    result_g = galaxy[3]
     result_d = 0
-    all_galax = defaultdict(list)
+    all_galax = defaultdict(deque)
     while len(galaxy) == 4:
         el = float(galaxy[0]), float(galaxy[1]), float(galaxy[2])
         all_galax[galaxy[3]].append(el)
         galaxy = input().split(" ")
-    for gal in all_galax.keys():
-        start = gal
+    if len(all_galax.keys()) == 1:
+        print(result_g, " ", result_g)
+        return
+    remained = set(all_galax.keys())
+    for start in all_galax.keys():
+        remained = remained.difference({start})
         for points in all_galax[start]:
-            for fin in all_galax.keys():
+            for fin in remained:
                 for pointf in all_galax[fin]:
                     d = distance(points, pointf)
                     if d > result_d:

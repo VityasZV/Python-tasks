@@ -26,14 +26,18 @@ def way_check(tunnels, begin, ending): #dungeons is just begin
     if check(new_dungeons.union(old_dungeons), ending):
         return True
     else:
-        while old_dungeons.union(new_dungeons) != old_dungeons:
-            old_dungeons = old_dungeons.union(new_dungeons)
+        un = old_dungeons.union(new_dungeons)
+        while un != old_dungeons:
+            old_dungeons = un
             save = new_dungeons
-            new_dungeons = set()
+            l = list()
             for el in save:
-                new_dungeons = new_dungeons.union(tunnels[el])
-            if check(new_dungeons.union(old_dungeons), ending):
+                app = list(i for i in tunnels[el])
+                l = l + app
+            new_dungeons = set(l).difference(old_dungeons)
+            if check(new_dungeons, ending):
                 return True
+            un = old_dungeons.union(new_dungeons)
         return False
 
 

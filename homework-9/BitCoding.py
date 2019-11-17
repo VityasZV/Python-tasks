@@ -21,7 +21,7 @@ def encode(txt):
     coding_dict = dict(list((s_frequency[i][1], "1" * i + "0") for i in range(len(s_frequency))))
     encoded_string_demo = "".join(coding_dict[i] for i in txt)
     encoded_string_demo += "0" * (ceil(len(encoded_string_demo) / 6) * 6 - len(encoded_string_demo))
-    return len(txt), "".join(coding_dict.keys()), shex(int(encoded_string_demo, 2)).strip()
+    return len(txt), "".join(coding_dict.keys()), shex(int(encoded_string_demo, 2))
 
 
 def decode(length, chars, code):
@@ -29,10 +29,3 @@ def decode(length, chars, code):
     list_of_codes = (str(bin(xehs(code)))[2:] + "0").replace("0", "0 ").split()[:length]
     decoded_string = "".join(coding_dict[i] for i in list_of_codes)
     return decoded_string
-
-# print(xehs("BREAKFAST"))
-# print(shex(10844745761445995))
-# res = encode("ENGINEERING WITHOUT MANAGEMENT IS ART.")
-# print(res)
-# txt = decode(*res)
-# print(txt)

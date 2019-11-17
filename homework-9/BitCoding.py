@@ -1,110 +1,38 @@
-from collections import defaultdict
-import operator
-alphabet_10_64 = {i - 32: chr(i) for i in range(32, 96)}
-alphabet_64_10 = {chr(i): i - 32 for i in range(32, 96)}
+from collections import Counter
+from math import ceil
 
 def shex(n):
-    n_64 = ""
+    bytes_l = []
     while n > 0:
-        n_64 += alphabet_10_64[n % 64]
-        n //= 64
-    return n_64[-1::-1]
-
+        bytes_l.append(32 + (n & 63))
+        n >>= 6
+    return bytes(reversed(bytes_l)).decode("ASCII")
 
 def xehs(s):
     n = 0
-    deg = 0
-    for c in s[-1::-1]:
-        n += alphabet_64_10[c] * (64 ** deg)
-        deg += 1
+    for c in s:
+        digit = ord(c) - 32
+        n = n << 6 | digit
     return n
 
 
-def binary_to_64(s):
-    n_10 = 0
-    deg = 0
-    for c in s[-1::-1]:
-        n_10 += (2 ** deg) * int(c)
-        deg += 1
-    return shex(n_10)
-
-
-def _64_to_binary(s):
-    n_10 = xehs(s)
-    n_2 = ""
-    while n_10 > 0:
-        n_2 += f"{n_10 % 2}"
-        n_10 //= 2
-    n_2 = n_2[::-1]
-    return n_2
-
-
-def additional_sort(f):
-    i = 0
-    while i < len(f) - 1:
-        start = i
-        finish = i
-        for_sort = []
-        while i < len(f) - 1 and f[i][1] == f[i + 1][1]:
-            i += 1
-            finish = i
-        if start != finish:
-            for_sort = f[start:finish + 1]
-            if len(for_sort):
-                for_replace = sorted(for_sort, key=operator.itemgetter(0), reverse=True)
-                for ind in range(start, finish + 1):
-                    f[ind] = for_replace[ind - start]
-                i += 1
-        else:
-            i += 1
-    result = "".join(el[0] for el in f)
-    return result
-
-
-def form_dict_for_coding(s):
-    coding = defaultdict(str)
-    amount_of_1 = 0
-    for c in s:
-        coding[c] = "1" * amount_of_1 + "0"
-        amount_of_1 += 1
-    return coding
-
-
-def form_dict_for_coding_reversed(s):
-    dic = form_dict_for_coding(s)
-    rev_dic = {i: j for i, j in zip(dic.values(), dic.keys())}
-    return rev_dic
-
-
 def encode(txt):
-    frequency = defaultdict(int)
-    for c in txt:
-        frequency[c] += 1
-    s_frequency = sorted(frequency.items(), key=operator.itemgetter(1), reverse=True)
-    string_sorted = additional_sort(s_frequency)
-    coding_dict = form_dict_for_coding(string_sorted)
-    encoded_string_demo = "".join(str(coding_dict[i]) for i in txt)
-    encoded_string = binary_to_64(encoded_string_demo)
-    return len(txt), string_sorted, encoded_string
+    s_frequency = list(sorted(list((j, i) for i, j in Counter(txt).most_common()), reverse=True))
+    coding_dict = dict(list((s_frequency[i][1], "1" * i + "0") for i in range(len(s_frequency))))
+    encoded_string_demo = "".join(coding_dict[i] for i in txt)
+    encoded_string_demo += "0" * (ceil(len(encoded_string_demo) / 6) * 6 - len(encoded_string_demo))
+    return len(txt), "".join(coding_dict.keys()), shex(int(encoded_string_demo, 2)).strip()
 
 
 def decode(length, chars, code):
-    bin_n = _64_to_binary(code)
-    coding_dict = form_dict_for_coding_reversed(chars)
-    i = 0
-    r = ""
-    res = ""
-    while i < len(bin_n):
-        r += f"{bin_n[i]}"
-        if bin_n[i] == "0":
-            res += coding_dict[r]
-            r = ""
-        i += 1
-    return res
+    coding_dict = dict(list(("1" * i + "0", chars[i]) for i in range(len(chars))))
+    list_of_codes = (str(bin(xehs(code)))[2:] + "0").replace("0", "0 ").split()[:length]
+    decoded_string = "".join(coding_dict[i] for i in list_of_codes)
+    return decoded_string
 
-print(xehs("BREAKFAST"))
-print(shex(10844745761445995))
-res = encode("ENGINEERING WITHOUT MANAGEMENT IS ART.")
-print(res)
-txt = decode(*res)
-print(txt)
+# print(xehs("BREAKFAST"))
+# print(shex(10844745761445995))
+# res = encode("ENGINEERING WITHOUT MANAGEMENT IS ART.")
+# print(res)
+# txt = decode(*res)
+# print(txt)

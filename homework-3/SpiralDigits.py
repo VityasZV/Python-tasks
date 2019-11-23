@@ -1,8 +1,11 @@
-def increment(i):
-    if i == 9:
-        return 0
-    else:
-        return i + 1
+def increment():
+    i = 0
+    yield i
+    while True:
+        i += 1
+        if i == 10:
+            i = 0
+        yield i
 
 
 def spiral_digits():
@@ -13,7 +16,8 @@ def spiral_digits():
         matrix.append([])
         matrix[s] = [0 for i in range(columns)]
 
-    i = 0  # using for [0..9]
+    generator = increment()
+    i = next(generator)  # using for [0..9]
 
     up = 0  # using for up start
     down = strings-1  # using for down border
@@ -24,30 +28,27 @@ def spiral_digits():
         while left <= right:
             matrix[up][left] = i
             left += 1
-            i = increment(i)
+            i = next(generator)
         left = old_left
         up += 1
         while up <= down:
             matrix[up][right] = i
             up += 1
-            i = increment(i)
+            i = next(generator)
         up = old_up
         right -= 1
         while right >= left:
             matrix[down][right] = i
             right -= 1
-            i = increment(i)
+            i = next(generator)
         right = old_right
         down -= 1
         while down > up:
             matrix[down][left] = i
             down -= 1
-            i = increment(i)
+            i = next(generator)
         down = old_down
-        up += 1
-        left += 1
-        right -= 1
-        down -= 1
+        up, left, right, down = up + 1, left + 1, right - 1, down - 1
         if up == down or left == right:
             break
         if up > down or left > right:
@@ -59,12 +60,12 @@ def spiral_digits():
             while left <= right:
                 matrix[up][left] = i
                 left += 1
-                i = increment(i)
+                i = next(generator)
         elif left == right:
             while up <= down:
                 matrix[up][left] = i
                 up += 1
-                i = increment(i)
+                i = next(generator)
     for i in range(strings):
         for j in range(columns):
             print(matrix[i][j], end=' ')

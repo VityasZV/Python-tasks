@@ -3,10 +3,9 @@ class Calculator:
     def __init__(self):
         self.variables = dict()
         self.variables['__builtins__'] = dir(__builtins__)
-        alphabet = [chr(i) for i in range(ord('a'), ord('z') + 1)] + [chr(i) for i in range(ord('A'), ord('A') + 1)]
+        alphabet = [chr(i) for i in range(ord('a'), ord('z') + 1)] + [chr(i) for i in range(ord('A'), ord('Z') + 1)]
         cmd = input()
         l = []
-        print(eval('dir()'))
         while cmd != "." and cmd != "":
             l.append(cmd)
             cmd = input()

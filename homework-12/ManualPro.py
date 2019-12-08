@@ -48,7 +48,7 @@ def ccheck(*classes):
         class Checked(*tuple(needed_classes)):
             pass
         return Checked
-    except BaseException as ERR:
+    except:
         class Checked(object):
             pass
 

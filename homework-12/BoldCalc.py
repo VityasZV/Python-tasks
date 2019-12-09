@@ -3,7 +3,9 @@ class Calculator:
     def __init__(self):
         self.variables = dict()
         self.variables['__builtins__'] = dir(__builtins__)
+        self.globals = {}
         alphabet = [chr(i) for i in range(ord('a'), ord('z') + 1)] + [chr(i) for i in range(ord('A'), ord('Z') + 1)]
+        print(alphabet)
         cmd = input()
         l = []
         while cmd != "." and cmd != "":
@@ -19,21 +21,11 @@ class Calculator:
                     elif Counter(i)['='] != 1:
                         raise SyntaxError(f"invalid assignment \'{i}\'")
                     else:
-                        # print("debug:", res, type(res))
-                        self.variables[arg] = eval(res, {'__builtins__': dir(__builtins__)}, self.variables)
+                        self.variables[arg] = eval(res, self.globals, self.variables)
                 elif i[0] == '#':
                     continue
                 else:
-                    print(eval(i, {'__builtins__': dir(__builtins__)}, self.variables))
-            except SyntaxError as Ex:
-                print(Ex)
-            except NameError as Ex:
-                print(Ex)
-            except TypeError as Ex:
-                print(Ex)
+                    print(eval(i, self.globals, self.variables))
             except BaseException as Ex:
                 print(Ex)
-        # print(self.variables)
-
-
-c = Calculator()
+Calculator()
